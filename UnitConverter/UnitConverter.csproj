@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConversionStep.cs" />
     <Compile Include="IMetricPrefixParser.cs" />
     <Compile Include="IUnitMapper.cs" />
     <Compile Include="IUnitParser.cs" />
