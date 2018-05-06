@@ -10,6 +10,6 @@ namespace UnitConverter
     {
         void RegisterMapping(string source_unit_name, string target_unit_name, double factor);
 
-        Dictionary<string, double> GetMappings(string source_unit_name);
+        double GetMappingFactor(string source_unit_name, string target_source_name);
     }
 }

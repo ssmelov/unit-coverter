@@ -16,12 +16,14 @@ namespace UnitConverter
             addMapping(target_unit_name, source_unit_name, 1.0 / factor);
         }
 
-        public Dictionary<string, double> GetMappings(string source_unit_name)
+        public double GetMappingFactor(string source_unit_name, string target_source_name)
         {
-            if (mappings.ContainsKey(source_unit_name))
-                return mappings[source_unit_name];
+            if (mappings.ContainsKey(source_unit_name) && mappings[source_unit_name].ContainsKey(target_source_name))
+            {
+                return mappings[source_unit_name][target_source_name];
+            }
 
-            return null;
+            throw new Exception($"Cannot convert from {source_unit_name} to {target_source_name}");
         }
 
         private void addMapping(string source_unit_name, string target_unit_name, double factor)

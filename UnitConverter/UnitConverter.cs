@@ -25,6 +25,7 @@ namespace UnitConverter
 
             unit_mapper.RegisterMapping(Units.Inches, Units.Meters, 0.0254);
             unit_mapper.RegisterMapping(Units.Feet, Units.Inches, 12);
+            unit_mapper.RegisterMapping(Units.Feet, Units.Meters, 0.3048);
             unit_mapper.RegisterMapping(Units.Bytes, Units.Bits, 8);
         }
 
@@ -43,27 +44,15 @@ namespace UnitConverter
 
         private double convert(Unit source_units, Unit target_units, double value)
         {
-            var queue = new Queue<ConversionStep>();
-            queue.Enqueue(new ConversionStep { UnitName = source_units.Name, Value = value * source_units.MetricPrefix.Factor });
+            double source_value = value * source_units.MetricPrefix.Factor;
+            string source_unit_name = source_units.Name;
+            string target_unit_name = target_units.Name;
 
-            while (queue.Count() > 0)
-            {
-                var conversion_step = queue.Dequeue();
+            if (target_unit_name == source_unit_name)
+                return source_value * (1.0 / target_units.MetricPrefix.Factor);
 
-                if (conversion_step.UnitName == target_units.Name)
-                    return conversion_step.Value * (1.0 / target_units.MetricPrefix.Factor);
-
-                var map = unit_mapper.GetMappings(conversion_step.UnitName);
-                if (map != null)
-                {
-                    foreach (var item in map)
-                    {
-                        queue.Enqueue(new ConversionStep { UnitName = item.Key, Value = conversion_step.Value * item.Value });
-                    }
-                }
-            }
-
-            throw new ArgumentException("Cannot not convert from " + source_units.Name + " to " + target_units.Name);
+            double factor = unit_mapper.GetMappingFactor(source_unit_name, target_unit_name);
+            return source_value * factor * (1.0 / target_units.MetricPrefix.Factor);
         }
     }
 }
